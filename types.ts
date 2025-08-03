@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const AccessTokenResponseSchema = z.object({
+export const TokenResponseSchema = z.object({
   access_token: z.string(),
   scope: z.string(),
   instance_url: z.string(),

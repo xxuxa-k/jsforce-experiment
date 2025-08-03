@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken"
 import * as jsforce from "jsforce"
-import { AccessTokenResponseSchema } from "./types"
+import { TokenResponseSchema } from "./types"
 import { readFile } from "fs/promises"
 import config from "./config"
 
@@ -15,7 +15,6 @@ export async function getJsforceConnection() {
   }, cert, {
       algorithm: "RS256",
     })
-  // console.log(signed)
 
   const tokenResponse = await fetch(`${config.audience}/services/oauth2/token`, {
     method: "post",
@@ -32,7 +31,7 @@ export async function getJsforceConnection() {
     return
   }
 
-  const { success, data } = AccessTokenResponseSchema.safeParse(await tokenResponse.json())
+  const { success, data } = TokenResponseSchema.safeParse(await tokenResponse.json())
   if (!success) {
     throw new Error(`Invalid JWT auth response: ${await tokenResponse.text()}`)
   }
