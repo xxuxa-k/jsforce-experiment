@@ -1,0 +1,23 @@
+query getAccounts($keyword: String) {
+  uiapi {
+    query {
+      Account(
+        first: 10,
+        where: {
+        BillingState: { eq: $keyword },
+      },
+        orderBy: {
+        Name: { order: ASC },
+      }
+        ) {
+        edges {
+          node {
+            Id
+            Name { value }
+            Website { value }
+          }
+        }
+      }
+    }
+  }
+}

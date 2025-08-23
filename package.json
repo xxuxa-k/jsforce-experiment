@@ -1,6 +1,9 @@
 {
   "name": "jsforce-experiment",
   "version": "1.0.0",
+  "scripts": {
+    "start": "ts-node"
+  },
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
     "jsforce": "^3.10.0",
