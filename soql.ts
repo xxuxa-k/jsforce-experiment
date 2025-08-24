@@ -1,6 +1,6 @@
 import { getJsforceConnection } from "./jsforceConnection"
 
-(async function () {
+(async () => {
   const conn = await getJsforceConnection()
 
   const soql = "SELECT Id, Name FROM Account Order By Name LIMIT 5"

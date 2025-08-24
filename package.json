@@ -2,7 +2,8 @@
   "name": "jsforce-experiment",
   "version": "1.0.0",
   "scripts": {
-    "start": "ts-node"
+    "start": "pnpm dlx ts-node",
+    "lint": "pnpm dlx @biomejs/biome lint"
   },
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
@@ -11,6 +12,7 @@
     "zod": "^4.0.14"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.2",
     "@types/jsonwebtoken": "^9.0.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"

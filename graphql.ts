@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { getJsforceConnection } from "./jsforceConnection"
 import { SALESFORCE_API_VERSION } from "./config"
-import { readFile } from "fs/promises"
+import { readFile } from "node:fs/promises"
 
 const ReponseSchema = z.object({
   data: z.object({
@@ -28,13 +28,18 @@ const ReponseSchema = z.object({
   errors: z.array(z.any()),
 })
 
-const main = async function () {
+const main = async () => {
   const conn = await getJsforceConnection()
 
   const buffer = await readFile("./query.graphql")
   const query = buffer.toString()
 
-  const url = new URL(`${conn.instanceUrl}/services/data/${SALESFORCE_API_VERSION!}/graphql`)
+  const apiVersion = SALESFORCE_API_VERSION ?? ""
+  if (!apiVersion) {
+    throw new Error("SALESFORCE_API_VERSION is not set")
+  }
+
+  const url = new URL(`${conn.instanceUrl}/services/data/${apiVersion}/graphql`)
   const response = await fetch(url, {
     method: "post",
     headers: new Headers({
@@ -60,7 +65,7 @@ const main = async function () {
     console.error(error)
     throw new Error("Invalid response format")
   }
-  data.data.uiapi.query.Account.edges.map(edge => {
+  data.data.uiapi.query.Account.edges.forEach(edge => {
     const node = edge.node
     console.log(node.Id, node.Name.value, node.Website.value)
   })

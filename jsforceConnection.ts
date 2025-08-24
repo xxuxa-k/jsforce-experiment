@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken"
 import * as jsforce from "jsforce"
 import { TokenResponseSchema } from "./types"
-import { readFile } from "fs/promises"
+import { readFile } from "node:fs/promises"
 import config from "./config"
 
 export async function getJsforceConnection() {

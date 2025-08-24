@@ -1,6 +1,6 @@
 import { getJsforceConnection } from "./jsforceConnection"
 
-(async function () {
+(async () => {
   const conn = await getJsforceConnection()
 
   const result = await conn.chatter.resource("/feed-elements").create({

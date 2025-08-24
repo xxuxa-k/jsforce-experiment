@@ -1,6 +1,6 @@
 import { getJsforceConnection } from "./jsforceConnection"
 
-(async function () {
+(async () => {
   const conn = await getJsforceConnection()
 
   const identity = await conn.identity()
