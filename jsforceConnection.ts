@@ -1,5 +1,5 @@
 import * as jwt from "jsonwebtoken"
-import * as jsforce from "jsforce"
+import { Connection } from "jsforce" 
 import { TokenResponseSchema } from "./types"
 import { readFile } from "node:fs/promises"
 import config from "./config"
@@ -36,7 +36,7 @@ export async function getJsforceConnection() {
     throw new Error(`Invalid JWT auth response: ${await tokenResponse.text()}`)
   }
 
-  const conn = new jsforce.Connection({
+  const conn = new Connection({
     accessToken: data.access_token,
     instanceUrl: data.instance_url,
   })
