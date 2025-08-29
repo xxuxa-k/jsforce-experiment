@@ -1,18 +1,22 @@
 import * as jwt from "jsonwebtoken"
-import { Connection } from "jsforce" 
+import {
+  Connection,
+  type StandardSchema,
+  type Schema,
+} from "jsforce" 
 import { TokenResponseSchema } from "./types"
 import { readFile } from "node:fs/promises"
 import config from "./config"
 
-export async function getJsforceConnection() {
-  const cert = await readFile(config.keyPath, 'utf8')
+export async function newJsforceConnection<T extends Schema = StandardSchema>() {
+  const key = await readFile(config.keyPath, 'utf8')
 
   const signed = jwt.sign({
     iss: config.issuer,
     aud: config.audience,
     sub: config.subject,
-    exp: (Math.floor(Date.now() / 1000) + 1 * 60) * 1000,
-  }, cert, {
+    exp: Math.floor(Date.now() / 1000) + 1 * 60,
+  }, key, {
       algorithm: "RS256",
     })
 
@@ -27,19 +31,20 @@ export async function getJsforceConnection() {
     }),
   })
   if (!tokenResponse.ok) {
-    console.error(await tokenResponse.text())
-    return
+    const text = await tokenResponse.text()
+    console.error(text)
+    throw new Error(`JWT auth error: ${text}`)
   }
 
-  const { success, data } = TokenResponseSchema.safeParse(await tokenResponse.json())
-  if (!success) {
-    throw new Error(`Invalid JWT auth response: ${await tokenResponse.text()}`)
+  const result = TokenResponseSchema.safeParse(await tokenResponse.json())
+  if (!result.success) {
+    const text = JSON.stringify(result)
+    throw new Error(`Invalid JWT auth response: ${text}`)
   }
 
-  const conn = new Connection({
-    accessToken: data.access_token,
-    instanceUrl: data.instance_url,
+  return new Connection<T>({
+    accessToken: result.data.access_token,
+    instanceUrl: result.data.instance_url,
+    version: config.apiVersion ?? "64.0",
   })
-
-  return conn
 }

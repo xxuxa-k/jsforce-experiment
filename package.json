@@ -2,11 +2,12 @@
   "name": "jsforce-experiment",
   "version": "1.0.0",
   "scripts": {
-    "start": "pnpm dlx ts-node",
-    "lint": "pnpm dlx @biomejs/biome lint"
+    "start": "pnpm exec ts-node",
+    "lint": "pnpm exec biome lint"
   },
   "packageManager": "pnpm@10.14.0",
   "dependencies": {
+    "@inquirer/prompts": "^7.8.3",
     "jsforce": "^3.10.0",
     "jsonwebtoken": "^9.0.2",
     "zod": "^4.0.14"
