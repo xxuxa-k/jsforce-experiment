@@ -2,6 +2,9 @@ import { createJsforceConnectionFromJsforceConfig } from "../jsforceConnection"
 
 (async () => {
   const conn = await createJsforceConnectionFromJsforceConfig()
-  const identity = await conn.identity()
-  console.log(identity)
+  
+  const sobject = conn.sobject("Account")
+  const metadata = await sobject.describe()
+
+  console.log(metadata)
 })()

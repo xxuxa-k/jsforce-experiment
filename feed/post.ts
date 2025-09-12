@@ -1,8 +1,8 @@
-import { newJsforceConnection } from "../jsforceConnection"
+import { createJsforceConnectionFromJsforceConfig } from "../jsforceConnection"
 
 (async () => {
   try {
-    const conn = await newJsforceConnection()
+    const conn = await createJsforceConnectionFromJsforceConfig()
 
     const result = await conn.chatter.resource("/feed-elements").create({
       body: {

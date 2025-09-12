@@ -1,20 +1,18 @@
-import { newJsforceConnection } from "../jsforceConnection"
+import { createJsforceConnectionFromJsforceConfig } from "../jsforceConnection"
+import { createFetcher } from "../fetcher"
 import { ReponseSchema } from "./types"
 import { readFile } from "node:fs/promises"
+import { resolve } from "node:path"
 
 (async () => {
-  const conn = await newJsforceConnection()
+  const conn = await createJsforceConnectionFromJsforceConfig()
 
-  const buffer = await readFile("./query.graphql")
+  const buffer = await readFile(resolve("graphql", "query.graphql"))
   const query = buffer.toString()
 
-  const url = new URL(`${conn.instanceUrl}/services/data/${conn.version}/graphql`)
-  const response = await fetch(url, {
+  const fetcher = createFetcher(conn)
+  const response = await fetcher("/graphql", {
     method: "post",
-    headers: new Headers({
-      "Authorization": `Bearer ${conn.accessToken}`,
-      "Content-Type": "application/json",
-    }),
     body: JSON.stringify({
       query,
       variables: {
@@ -23,20 +21,20 @@ import { readFile } from "node:fs/promises"
     }),
   })
 
-  const json = await response.json()
-  if (!response.ok) {
-    console.error("Error:", json)
-    throw new Error("Error")
-  }
-  const result = ReponseSchema.safeParse(json)
-
+  const result = ReponseSchema.safeParse(response)
   if (!result.success) {
     console.error(result.error)
     throw new Error("Invalid response format")
   }
-  result.data.data.uiapi.query.Account.edges.forEach(edge => {
-    const node = edge.node
-    console.log(node.Id, node.Name.value, node.Website.value)
-  })
+
+  const edges = result.data.data.uiapi.query.Account.edges
+  if (edges.length > 0) {
+    edges.forEach(edge => {
+      const node = edge.node
+      console.log(node.Id, node.Name.value, node.Website.value)
+    })
+  } else {
+    console.log("No accounts found.")
+  }
 })()
 

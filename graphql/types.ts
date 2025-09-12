@@ -24,3 +24,5 @@ export const ReponseSchema = z.object({
   }),
   errors: z.array(z.any()),
 })
+
+export type ResponseType = z.infer<typeof ReponseSchema>

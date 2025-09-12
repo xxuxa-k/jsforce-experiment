@@ -4,7 +4,7 @@ query getAccounts($keyword: String) {
       Account(
         first: 10,
         where: {
-        BillingState: { eq: $keyword },
+        Name: { like: $keyword },
       },
         orderBy: {
         Name: { order: ASC },

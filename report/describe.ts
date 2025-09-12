@@ -1,7 +1,7 @@
-import { newJsforceConnection } from "../jsforceConnection"
+import { createJsforceConnectionFromJsforceConfig } from "../jsforceConnection"
 
 (async () => {
-  const conn = await newJsforceConnection()
+  const conn = await createJsforceConnectionFromJsforceConfig()
 
   const reportId = "00OJ3000000PkqeMAC"
   const report = conn.analytics.report(reportId)

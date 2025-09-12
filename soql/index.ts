@@ -1,7 +1,7 @@
-import { newJsforceConnection } from "../jsforceConnection"
+import { createJsforceConnectionFromJsforceConfig } from "../jsforceConnection"
 
 (async () => {
-  const conn = await newJsforceConnection()
+  const conn = await createJsforceConnectionFromJsforceConfig()
 
   const soql = "SELECT Id, Name FROM Account Order By Name LIMIT 5"
   const res = await conn.query(soql)
